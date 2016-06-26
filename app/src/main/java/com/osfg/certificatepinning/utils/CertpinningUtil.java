@@ -1,8 +1,16 @@
 package com.osfg.certificatepinning.utils;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.osfg.certificatepinning.R;
 import com.osfg.certificatepinning.httpclient.PinnedHttpClient;
 import com.osfg.certificatepinning.httpclient.SecureSocketFactory;
 
@@ -70,6 +78,35 @@ public class CertpinningUtil {
             e.printStackTrace();
         }
         return new ThreadSafeClientConnManager(params, schemeRegistry);
+    }
+
+    public static void showDialog(String title, String[] instructions, Activity callingActivity) {
+        LayoutInflater inflater= LayoutInflater.from(callingActivity);
+        View informationView=inflater.inflate(R.layout.information_layout, null);
+
+        LinearLayout informationLayout=(LinearLayout)informationView.findViewById(R.id.informationLayout);
+
+        for(String instruction : instructions) {
+            final TextView instructionTextView = new TextView(callingActivity);
+            instructionTextView.setText(instruction);
+            instructionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.bullet_point, 0, 0, 0);
+            final float scale = callingActivity.getResources().getDisplayMetrics().density;
+            instructionTextView.setCompoundDrawablePadding((int)(10.0f * scale));
+            int padding = (int)(10.0f * scale);
+            instructionTextView.setPadding(padding, padding, padding, padding);
+            informationLayout.addView(instructionTextView);
+        }
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(callingActivity);
+        alertDialog.setTitle(title);
+        alertDialog.setView(informationView);
+        alertDialog.setPositiveButton(callingActivity.getString(R.string.string_ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.show();
     }
 
 }

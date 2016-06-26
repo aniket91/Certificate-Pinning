@@ -12,9 +12,38 @@
     tools:context="com.osfg.certificatepinning.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <EditText
+        android:id="@+id/enter_url_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_url"/>
+
+    <Button
+        android:id="@+id/mode_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mode_unpinned"
+        android:layout_below="@id/enter_url_id"/>
+
+
+    <Button
+        android:id="@+id/submit_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:layout_below="@id/mode_id"/>
+
+    <Button
+        android:id="@+id/clear_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/clear"
+        android:layout_below="@id/submit_id" />
+
     <TextView
         android:id="@+id/resultView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/clear_id"
+        android:text="Results will be displayed here..." />
 </RelativeLayout>

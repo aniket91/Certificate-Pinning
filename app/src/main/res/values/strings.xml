@@ -1,4 +1,25 @@
 <resources>
     <string name="app_name">CertificatePinning</string>
+
     <string name="action_about">About</string>
+    <string name="action_httpclient_pinned">Http Client Pinned</string>
+    <string name="action_httpclient_unpinned">Http Client Un Pinned</string>
+
+    <string name="enter_url">Enter URL</string>
+    <string name="submit">Submit</string>
+    <string name="clear">Clear</string>
+
+    <string name="mode_unpinned">Mode : Un Pinned</string>
+    <string name="mode_pinned">Mode : Pinned</string>
+
+    <string name="string_ok">Ok</string>
+
+    <string-array name="notes_array">
+        <item>This is a sample app created for demonstration certificate pinning in Android by Aniket Thakur. </item>
+        <item>Source code for this app is present on github - https://github.com/aniket91/CertificatePinning </item>
+        <item>You can select pinned on unpinned mode from options menu</item>
+        <item>Unpinned mode allows all https urls as long as android OS trusts it (default behavior)</item>
+        <item>Pinned mode pins www.ssllabs.com public certificate. All other https calls will fail in this mode.</item>
+        <item>Please contact aniketthakur91@gmail.com for any further questions or suggestions</item>
+    </string-array>
 </resources>

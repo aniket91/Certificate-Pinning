@@ -71,6 +71,7 @@ public class SecureTrustManager implements X509TrustManager {
             }
         }
         else {
+            Log.d(TAG,"Certificate pinning disable. Doing normal checks.");
             try {
                 for(TrustManager trustManager : getTrustManagerFactory(null).getTrustManagers()) {
                     ((X509TrustManager) trustManager).checkServerTrusted(chain, authType);
