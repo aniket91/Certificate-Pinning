@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CertificatePinning</string>
+    <string name="app_name">Certificate Pinning</string>
 
     <string name="action_about">About</string>
     <string name="action_httpclient_pinned">Http Client Pinned</string>
