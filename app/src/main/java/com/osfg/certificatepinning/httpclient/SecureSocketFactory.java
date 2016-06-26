@@ -1,5 +1,7 @@
 package com.osfg.certificatepinning.httpclient;
 
+import android.util.Log;
+
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
 import java.io.IOException;
@@ -27,18 +29,19 @@ public class SecureSocketFactory extends SSLSocketFactory {
 
     public  SecureSocketFactory(KeyStore truststore, List<X509Certificate> pinnedCerts, boolean pinCerts) throws NoSuchAlgorithmException, KeyManagementException, UnrecoverableKeyException, KeyStoreException {
         super(truststore);
-        sslContext.init(null, new TrustManager[] {
-                new SecureTrustManager(pinnedCerts, pinCerts)
-        }, null);
+        TrustManager tm = new SecureTrustManager(pinnedCerts, pinCerts);
+        sslContext.init(null, new TrustManager[] {tm}, null);
     }
 
     @Override
     public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
+        Log.d(TAG, "Creating socket with custom ssl context");
         return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
     }
 
     @Override
     public Socket createSocket() throws IOException {
+        Log.d(TAG, "Creating socket with custom ssl context");
         return sslContext.getSocketFactory().createSocket();
     }
 

@@ -31,25 +31,6 @@ public class SecureTrustManager implements X509TrustManager {
     @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
 
-        if(pinCerts) {
-            if(pinnedCerts.contains(chain[0])) {
-                return;
-            }
-            else {
-                throw new CertificateException("Pinned certificate not matching with X509Certificate cert");
-            }
-        }
-        else {
-            try {
-                for(TrustManager trustManager : getTrustManagerFactory(null).getTrustManagers()) {
-                    ((X509TrustManager) trustManager).checkServerTrusted(chain, authType);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Normal SSL check failed for site",e);
-            }
-
-        }
-
     }
 
     private TrustManagerFactory getTrustManagerFactory(KeyStore keyStore) {
@@ -65,7 +46,40 @@ public class SecureTrustManager implements X509TrustManager {
 
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        Log.d(TAG, "Cheking if client is trusted. Pinning enabled : " + pinCerts);
 
+
+        if(pinCerts) {
+
+            if(pinnedCerts == null || pinnedCerts.size() == 0) {
+                Log.e(TAG, "Pinning enabled but no pinned certs provided");
+                throw new CertificateException("No certificates provided for pinning");
+            }
+
+            if(chain == null || chain.length < 1) {
+                if(pinnedCerts == null || pinnedCerts.size() == 0) {
+                    Log.e(TAG, "No certificates received in chain");
+                    throw new CertificateException("No certificates received in chain");
+                }
+            }
+
+            if(pinnedCerts.contains(chain[0])) {
+                return;
+            }
+            else {
+                throw new CertificateException("Pinned certificate not matching with pinned X509Certificate cert");
+            }
+        }
+        else {
+            try {
+                for(TrustManager trustManager : getTrustManagerFactory(null).getTrustManagers()) {
+                    ((X509TrustManager) trustManager).checkServerTrusted(chain, authType);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Normal SSL check failed for site",e);
+            }
+
+        }
     }
 
     @Override

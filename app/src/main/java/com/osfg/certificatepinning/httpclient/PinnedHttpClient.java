@@ -1,11 +1,14 @@
 package com.osfg.certificatepinning.httpclient;
 
+import com.osfg.certificatepinning.utils.CertpinningUtil;
+
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpParams;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -19,36 +22,14 @@ import java.util.List;
  */
 public class PinnedHttpClient extends DefaultHttpClient {
 
-    private static final String HTTP_SCHEME = "http";
-    private static final String HTTPS_SCHEME = "https";
-    private static final int HTTP_PORT = 80;
-    private static final int HTTPS_PORT = 443;
-
-    private List<X509Certificate> pinnedCerts;
-    private boolean pinCerts;
+    public static final String HTTP_SCHEME = "http";
+    public static final String HTTPS_SCHEME = "https";
+    public static final int HTTP_PORT = 80;
+    public static final int HTTPS_PORT = 443;
 
     private static final String TAG = PinnedHttpClient.class.getSimpleName();
 
-    public PinnedHttpClient(List<X509Certificate> pinnedCerts, boolean pinCerts) {
-        this.pinnedCerts = pinnedCerts;
-        this.pinCerts = pinCerts;
-    }
-
-    @Override
-    protected ClientConnectionManager createClientConnectionManager() {
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme(HTTP_SCHEME, PlainSocketFactory.getSocketFactory(),HTTP_PORT));
-        try {
-            schemeRegistry.register(new Scheme(HTTPS_SCHEME, new SecureSocketFactory(null, pinnedCerts, pinCerts), HTTPS_PORT));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (UnrecoverableKeyException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        }
-        return new ThreadSafeClientConnManager(getParams(), schemeRegistry);
+    public PinnedHttpClient(HttpParams params, List<X509Certificate> pinnedCerts, boolean pinCerts) {
+        super(CertpinningUtil.createClientConnectionManager(params, pinnedCerts, pinCerts), (HttpParams)null);
     }
 }
