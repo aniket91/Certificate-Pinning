@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     boolean pinCerts;
+    boolean useHttpClient;
+    boolean useHttpURLConnection;
+    boolean isProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     ((Button)findViewById(R.id.submit_id)).setClickable(false);
                     ((Button)findViewById(R.id.clear_id)).setClickable(false);
                     ((Button)findViewById(R.id.submit_id)).setText("Executing....");
-                    new NetworkTask(MainActivity.this,MainActivity.this.pinCerts,url).execute();
+                    new NetworkTask(MainActivity.this,MainActivity.this.pinCerts,MainActivity.this.useHttpClient,MainActivity.this.useHttpURLConnection,MainActivity.this.isProxy,url).execute();
                 }
             }
         });
@@ -84,19 +87,61 @@ public class MainActivity extends AppCompatActivity {
         {
             case R.id.action_settings:
                 CertpinningUtil.showDialog("Notes",getResources().getStringArray(R.array.notes_array),this);
-                return true;
+                break;
             case R.id.action_httpclient_pinned:
                 pinCerts = true;
-                ((EditText)findViewById(R.id.enter_url_id)).setText("https://www.ssllabs.com/");
-                ((Button)findViewById(R.id.mode_id)).setText(getString(R.string.mode_pinned));
-                return true;
+                useHttpClient = true;
+                useHttpURLConnection = false;
+                break;
             case R.id.action_httpclient_unpinned:
-                ((Button)findViewById(R.id.mode_id)).setText(getString(R.string.mode_unpinned));
                 pinCerts = false;
-                return true;
+                useHttpClient = true;
+                useHttpURLConnection = false;
+                break;
+            case R.id.action_httpurlconnection_pinned:
+                pinCerts = true;
+                useHttpClient = false;
+                useHttpURLConnection = true;
+                break;
+            case R.id.action_httpurlconection_unpinned:
+                pinCerts = false;
+                useHttpClient = false;
+                useHttpURLConnection = true;
+                pinCerts = false;
+                break;
              default:
-                return super.onOptionsItemSelected(item);
+                 super.onOptionsItemSelected(item);
         }
+
+        StringBuilder sb = new StringBuilder();
+        if(pinCerts) {
+            ((EditText)findViewById(R.id.enter_url_id)).setText("https://www.ssllabs.com/");
+            sb.append(getString(R.string.mode_pinned));
+        }
+        else {
+            sb.append(getString(R.string.mode_unpinned));
+        }
+
+        sb.append("\n");
+
+        if(useHttpClient) {
+            sb.append(getString(R.string.client_httpclient));
+        }
+        else if(useHttpURLConnection){
+            sb.append(getString(R.string.client_httpurlconnection));
+        }
+        sb.append("\n");
+
+        if(isProxy) {
+            sb.append(getString(R.string.proxy_yes));
+        }
+        else {
+            sb.append(getString(R.string.proxy_no));
+        }
+
+        ((Button)findViewById(R.id.mode_id)).setText(sb.toString());
+
+        return true;
 
     }
 

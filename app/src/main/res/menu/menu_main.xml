@@ -15,6 +15,17 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_httpurlconnection_pinned"
+        android:orderInCategory="100"
+        android:title="@string/action_httpurlconnection_pinned"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_httpurlconection_unpinned"
+        android:orderInCategory="100"
+        android:title="@string/action_httpurlconection_unpinned"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_about"

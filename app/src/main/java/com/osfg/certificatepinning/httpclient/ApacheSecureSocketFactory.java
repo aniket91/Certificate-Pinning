@@ -21,13 +21,13 @@ import javax.net.ssl.TrustManager;
 /**
  * Created by athakur on 6/26/16.
  */
-public class SecureSocketFactory extends SSLSocketFactory {
+public class ApacheSecureSocketFactory extends SSLSocketFactory {
 
     private static final String TLS = "TLS";
     SSLContext sslContext = SSLContext.getInstance(TLS);
-    private static final String TAG = SecureSocketFactory.class.getSimpleName();
+    private static final String TAG = ApacheSecureSocketFactory.class.getSimpleName();
 
-    public  SecureSocketFactory(KeyStore truststore, List<X509Certificate> pinnedCerts, boolean pinCerts) throws NoSuchAlgorithmException, KeyManagementException, UnrecoverableKeyException, KeyStoreException {
+    public ApacheSecureSocketFactory(KeyStore truststore, List<X509Certificate> pinnedCerts, boolean pinCerts) throws NoSuchAlgorithmException, KeyManagementException, UnrecoverableKeyException, KeyStoreException {
         super(truststore);
         TrustManager tm = new SecureTrustManager(pinnedCerts, pinCerts);
         sslContext.init(null, new TrustManager[] {tm}, null);

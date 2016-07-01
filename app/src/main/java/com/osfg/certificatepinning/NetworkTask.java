@@ -18,6 +18,7 @@ import org.apache.http.params.HttpParams;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +33,17 @@ public class NetworkTask extends AsyncTask<String,Object,String> {
     private MainActivity ctx;
     private boolean pinnCerts;
     private String url;
+    private boolean useHttpClient;
+    private boolean useHttpURLConnection;
+    private boolean isProxy;
 
-    public NetworkTask(MainActivity ctx, boolean pinnCerts, String url) {
+    public NetworkTask(MainActivity ctx, boolean pinnCerts, boolean useHttpClient, boolean useHttpURLConnection, boolean isProxy, String url) {
         this.ctx = ctx;
         this.pinnCerts = pinnCerts;
         this.url = url;
+        this.useHttpClient = useHttpClient;
+        this.useHttpURLConnection = useHttpURLConnection;
+        this.isProxy = isProxy;
     }
 
     @Override
@@ -62,11 +69,21 @@ public class NetworkTask extends AsyncTask<String,Object,String> {
             pinnedCerts.add(CertpinningUtil.convertToX509Certificate(sb.toString()));
         }
 
-        HttpParams httpParams = new BasicHttpParams();
-        PinnedHttpClient pinnedHttpClient = new PinnedHttpClient(httpParams,pinnedCerts,pinnCerts);
+        Log.d(TAG, "useHttpClient : " + useHttpClient + " useHttpURLConnection : " + useHttpURLConnection + " isproxy : " + isProxy);
+
         try {
-            HttpResponse response = pinnedHttpClient.execute(new HttpGet(url));
-            return response.getStatusLine().toString();
+
+            if(useHttpClient) {
+                HttpParams httpParams = new BasicHttpParams();
+                PinnedHttpClient pinnedHttpClient = new PinnedHttpClient(httpParams,pinnedCerts,pinnCerts);
+                HttpResponse response = pinnedHttpClient.execute(new HttpGet(url));
+                return response.getStatusLine().toString();
+            }
+            else if(useHttpURLConnection) {
+                return CertpinningUtil.downloadUrl(url, pinnedCerts, pinnCerts);
+            }
+            return "Something went wrong!";
+
         } catch (Exception e) {
             Log.e(TAG, "Error in making network call",e);
             return e.toString();

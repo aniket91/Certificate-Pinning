@@ -4,6 +4,8 @@
     <string name="action_about">About</string>
     <string name="action_httpclient_pinned">Http Client Pinned</string>
     <string name="action_httpclient_unpinned">Http Client Un Pinned</string>
+    <string name="action_httpurlconnection_pinned">HttpURLConnection Pinned</string>
+    <string name="action_httpurlconection_unpinned">HttpURLConnection Un Pinned</string>
 
     <string name="enter_url">Enter URL</string>
     <string name="submit">Submit</string>
@@ -11,6 +13,12 @@
 
     <string name="mode_unpinned">Mode : Un Pinned</string>
     <string name="mode_pinned">Mode : Pinned</string>
+
+    <string name="client_httpclient">Client : DefaultHttpClient</string>
+    <string name="client_httpurlconnection">Client : HttpURLConnection</string>
+
+    <string name="proxy_yes">Proxy : Yes</string>
+    <string name="proxy_no">Proxy : No</string>
 
     <string name="string_ok">Ok</string>
 
