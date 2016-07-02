@@ -29,7 +29,7 @@ public class CertPinningTest {
         System.out.println("Cert Data : " + sb.toString());
         List<X509Certificate> pinnedCerts = new ArrayList<>();
         pinnedCerts.add(CertpinningUtil.convertToX509Certificate(sb.toString()));
-        PinnedHttpClient pinnedHttpClient = new PinnedHttpClient(null,pinnedCerts,true);
+        PinnedHttpClient pinnedHttpClient = new PinnedHttpClient(null,pinnedCerts,true, false);
         pinnedHttpClient.execute(new HttpGet("https://www.ssllabs.com/"));
     }
 

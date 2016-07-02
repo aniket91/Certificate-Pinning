@@ -27,9 +27,9 @@ public class ApacheSecureSocketFactory extends SSLSocketFactory {
     SSLContext sslContext = SSLContext.getInstance(TLS);
     private static final String TAG = ApacheSecureSocketFactory.class.getSimpleName();
 
-    public ApacheSecureSocketFactory(KeyStore truststore, List<X509Certificate> pinnedCerts, boolean pinCerts) throws NoSuchAlgorithmException, KeyManagementException, UnrecoverableKeyException, KeyStoreException {
+    public ApacheSecureSocketFactory(KeyStore truststore, List<X509Certificate> pinnedCerts, boolean pinCerts, boolean isProxy) throws NoSuchAlgorithmException, KeyManagementException, UnrecoverableKeyException, KeyStoreException {
         super(truststore);
-        TrustManager tm = new SecureTrustManager(pinnedCerts, pinCerts);
+        TrustManager tm = new SecureTrustManager(pinnedCerts, pinCerts, isProxy);
         sslContext.init(null, new TrustManager[] {tm}, null);
     }
 

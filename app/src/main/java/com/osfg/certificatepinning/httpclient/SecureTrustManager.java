@@ -20,11 +20,13 @@ public class SecureTrustManager implements X509TrustManager {
 
     List<X509Certificate> pinnedCerts;
     boolean pinCerts;
+    boolean isProxy;
     private static final String TAG = SecureTrustManager.class.getSimpleName();
 
-    public SecureTrustManager(List<X509Certificate> pinnedCerts, boolean pinCerts) {
+    public SecureTrustManager(List<X509Certificate> pinnedCerts, boolean pinCerts, boolean isProxy) {
         this.pinnedCerts = pinnedCerts;
         this.pinCerts = pinCerts;
+        this.isProxy = isProxy;
     }
 
 
@@ -63,12 +65,24 @@ public class SecureTrustManager implements X509TrustManager {
                 }
             }
 
-            if(pinnedCerts.contains(chain[0])) {
-                return;
+            if(isProxy){
+                if(pinnedCerts.contains(chain[chain.length-1])) {
+                    return;
+                }
+                else {
+                    throw new CertificateException("Pinned certificate not matching with proxy pinned X509Certificate cert");
+                }
+
             }
             else {
-                throw new CertificateException("Pinned certificate not matching with pinned X509Certificate cert");
+                if(pinnedCerts.contains(chain[0])) {
+                    return;
+                }
+                else {
+                    throw new CertificateException("Pinned certificate not matching with pinned X509Certificate cert");
+                }
             }
+
         }
         else {
             Log.d(TAG,"Certificate pinning disable. Doing normal checks.");

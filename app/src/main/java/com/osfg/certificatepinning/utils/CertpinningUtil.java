@@ -69,7 +69,7 @@ public class CertpinningUtil {
         return null;
     }
 
-    public static ClientConnectionManager createClientConnectionManager(HttpParams params, List<X509Certificate> pinnedCerts, boolean pinCerts) {
+    public static ClientConnectionManager createClientConnectionManager(HttpParams params, List<X509Certificate> pinnedCerts, boolean pinCerts, boolean isProxy) {
 
         Log.d(TAG, "Creating client connection manager with pinning enabled : " + pinCerts);
         String noOfCertsToPin = pinnedCerts == null ? "0" : String.valueOf(pinnedCerts.size());
@@ -78,7 +78,7 @@ public class CertpinningUtil {
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme(PinnedHttpClient.HTTP_SCHEME, PlainSocketFactory.getSocketFactory(), PinnedHttpClient.HTTP_PORT));
         try {
-            schemeRegistry.register(new Scheme(PinnedHttpClient.HTTPS_SCHEME, new ApacheSecureSocketFactory(null, pinnedCerts, pinCerts), PinnedHttpClient.HTTPS_PORT));
+            schemeRegistry.register(new Scheme(PinnedHttpClient.HTTPS_SCHEME, new ApacheSecureSocketFactory(null, pinnedCerts, pinCerts, isProxy), PinnedHttpClient.HTTPS_PORT));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (KeyManagementException e) {
@@ -120,7 +120,7 @@ public class CertpinningUtil {
         alert.show();
     }
 
-    public static String downloadUrl(String myurl, List<X509Certificate> pinnedCerts, boolean pinnCerts) throws IOException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+    public static String downloadUrl(String myurl, List<X509Certificate> pinnedCerts, boolean pinnCerts, boolean isProxy) throws IOException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         InputStream is = null;
         // Only display the first 500 characters of the retrieved
         // web page content.
@@ -130,7 +130,7 @@ public class CertpinningUtil {
             URL url = new URL(myurl);
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             if(pinnCerts) {
-                conn.setSSLSocketFactory(getPinnedSSLContext(null, pinnedCerts, pinnCerts).getSocketFactory());
+                conn.setSSLSocketFactory(getPinnedSSLContext(null, pinnedCerts, pinnCerts, isProxy).getSocketFactory());
             }
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
@@ -165,10 +165,10 @@ public class CertpinningUtil {
         return new String(buffer);
     }
 
-    public static SSLContext getPinnedSSLContext(KeyStore truststore, List<X509Certificate> pinnedCerts, boolean pinCerts) throws NoSuchAlgorithmException, KeyManagementException {
+    public static SSLContext getPinnedSSLContext(KeyStore truststore, List<X509Certificate> pinnedCerts, boolean pinCerts, boolean isProxy) throws NoSuchAlgorithmException, KeyManagementException {
 
         SSLContext sslContext = SSLContext.getInstance(TLS);
-        TrustManager tm = new SecureTrustManager(pinnedCerts, pinCerts);
+        TrustManager tm = new SecureTrustManager(pinnedCerts, pinCerts, isProxy);
         sslContext.init(null, new TrustManager[] {tm}, null);
         return sslContext;
     }

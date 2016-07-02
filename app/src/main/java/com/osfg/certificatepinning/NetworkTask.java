@@ -75,12 +75,12 @@ public class NetworkTask extends AsyncTask<String,Object,String> {
 
             if(useHttpClient) {
                 HttpParams httpParams = new BasicHttpParams();
-                PinnedHttpClient pinnedHttpClient = new PinnedHttpClient(httpParams,pinnedCerts,pinnCerts);
+                PinnedHttpClient pinnedHttpClient = new PinnedHttpClient(httpParams,pinnedCerts,pinnCerts, isProxy);
                 HttpResponse response = pinnedHttpClient.execute(new HttpGet(url));
                 return response.getStatusLine().toString();
             }
             else if(useHttpURLConnection) {
-                return CertpinningUtil.downloadUrl(url, pinnedCerts, pinnCerts);
+                return CertpinningUtil.downloadUrl(url, pinnedCerts, pinnCerts, isProxy);
             }
             return "Something went wrong!";
 

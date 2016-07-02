@@ -29,7 +29,7 @@ public class PinnedHttpClient extends DefaultHttpClient {
 
     private static final String TAG = PinnedHttpClient.class.getSimpleName();
 
-    public PinnedHttpClient(HttpParams params, List<X509Certificate> pinnedCerts, boolean pinCerts) {
-        super(CertpinningUtil.createClientConnectionManager(params, pinnedCerts, pinCerts), (HttpParams)null);
+    public PinnedHttpClient(HttpParams params, List<X509Certificate> pinnedCerts, boolean pinCerts, boolean isProxy) {
+        super(CertpinningUtil.createClientConnectionManager(params, pinnedCerts, pinCerts, isProxy), (HttpParams)null);
     }
 }

@@ -1,27 +1,27 @@
 package com.osfg.certificatepinning;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.osfg.certificatepinning.utils.CertpinningUtil;
-
+/**
+ * Created by athakur on 6/26/16.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     boolean pinCerts;
-    boolean useHttpClient;
+    boolean useHttpClient = true;
     boolean useHttpURLConnection;
     boolean isProxy;
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     ((Button)findViewById(R.id.submit_id)).setClickable(false);
                     ((Button)findViewById(R.id.clear_id)).setClickable(false);
                     ((Button)findViewById(R.id.submit_id)).setText("Executing....");
-                    new NetworkTask(MainActivity.this,MainActivity.this.pinCerts,MainActivity.this.useHttpClient,MainActivity.this.useHttpURLConnection,MainActivity.this.isProxy,url).execute();
+                    new NetworkTask(MainActivity.this,MainActivity.this.pinCerts,MainActivity.this.useHttpClient,MainActivity.this.useHttpURLConnection,MainActivity.this.isProxy,url.trim()).execute();
                 }
             }
         });
@@ -150,6 +150,9 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG,"Invalid URL. Please provide valid URL");
             Toast.makeText(this, "Please provide valid URL", Toast.LENGTH_SHORT).show();
             return false;
+        }
+        if(!url.startsWith("https://")) {
+            Log.w(TAG," Pinning works only for https urls . Urls must start with https://");
         }
         return true;
     }
